@@ -1,0 +1,25 @@
+import java.util.*;
+
+// Card Collection System
+class CardCollection {
+    private Map<String, List<String>> cardMap;
+    
+    public CardCollection() {
+        cardMap = new HashMap<>();
+    }
+    
+    public void addCard(String symbol, String card) {
+        cardMap.putIfAbsent(symbol, new ArrayList<>());
+        cardMap.get(symbol).add(card);
+    }
+    
+    public List<String> getCards(String symbol) {
+        return cardMap.getOrDefault(symbol, Collections.emptyList());
+    }
+    
+    public void displayAllCards() {
+        for (Map.Entry<String, List<String>> entry : cardMap.entrySet()) {
+            System.out.println("Symbol: " + entry.getKey() + " -> Cards: " + entry.getValue());
+        }
+    }
+}
