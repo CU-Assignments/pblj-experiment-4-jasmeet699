@@ -1,0 +1,54 @@
+import java.util.*;
+class TicketBookingSystem {
+    private final boolean[] seats;
+    
+    public TicketBookingSystem(int totalSeats) {
+        seats = new boolean[totalSeats];
+    }
+    
+    public synchronized boolean bookSeat(int seatNumber, String user) {
+        if (seatNumber < 0 || seatNumber >= seats.length || seats[seatNumber]) {
+            return false; // Already booked or invalid seat number
+        }
+        seats[seatNumber] = true;
+        System.out.println(user + " booked seat " + seatNumber);
+        return true;
+    }
+}
+
+class BookingThread extends Thread {
+    private TicketBookingSystem system;
+    private int seatNumber;
+    private String user;
+    
+    public BookingThread(TicketBookingSystem system, int seatNumber, String user, int priority) {
+        this.system = system;
+        this.seatNumber = seatNumber;
+        this.user = user;
+        setPriority(priority);
+    }
+    
+    @Override
+    public void run() {
+        system.bookSeat(seatNumber, user);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Card Collection Example
+        CardCollection collection = new CardCollection();
+        collection.addCard("Hearts", "Ace");
+        collection.addCard("Hearts", "King");
+        collection.addCard("Spades", "Queen");
+        collection.displayAllCards();
+        
+        // Ticket Booking Example
+        TicketBookingSystem bookingSystem = new TicketBookingSystem(10);
+        Thread vip = new BookingThread(bookingSystem, 2, "VIP User", Thread.MAX_PRIORITY);
+        Thread normalUser = new BookingThread(bookingSystem, 2, "Regular User", Thread.MIN_PRIORITY);
+        
+        vip.start();
+        normalUser.start();
+    }
+}
